@@ -111,6 +111,17 @@ class ImageEntry(BaseModel):
         ..., description="Path to the directory containing the rockcraft.yaml"
     )
 
+    lfs: bool = Field(
+        description="Whether to use Git LFS for this image",
+        default=False,
+    )
+
+    lfs_pull_pattern: Optional[str] = Field(
+        description="Directory pattern for Git LFS checkout",
+        default=None,
+        alias="lfs-pull-pattern",
+    )
+
     pro_services: Optional[list[str]] = Field(
         description="List of Ubuntu Pro services to build the rock with",
         default_factory=list,
@@ -198,7 +209,9 @@ class CIConfig(BaseModel):
                         ImageEntry(
                             directory=os.path.dirname(d),
                             registries=image.registries,
-                            pro_services=image.pro_services
+                            pro_services=image.pro_services,
+                            lfs=image.lfs,
+                            lfs_checkout_directory=image.lfs_checkout_directory,
                         )
                     )
             else:
@@ -287,6 +300,8 @@ class CIConfig(BaseModel):
                     "pro-services": ",".join(pro_services),
                     "artifact-name": artifact_name,
                     "run-tests": run_tests,
+                    "lfs": image.lfs,
+                    "lfs-pull-pattern": image.lfs_pull_pattern or "",
                 }
             )
         return matrix

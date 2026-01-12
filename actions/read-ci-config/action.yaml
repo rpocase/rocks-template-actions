@@ -20,6 +20,12 @@ outputs:
   upload-matrix:
     description: "JSON array of upload matrix"
     value: ${{ steps.read-ci-config.outputs.upload-matrix }}
+  lfs:
+    description: "Whether to use Git LFS"
+    value: ${{ steps.read-ci-config.outputs.lfs }}
+  lfs-checkout-pattern:
+    description: "Git LFS checkout pattern"
+    value: ${{ steps.read-ci-config.outputs.lfs-checkout-pattern }}
 
 runs:
   using: "composite"
